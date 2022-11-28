@@ -51,7 +51,7 @@ module.exports = {
   },
 
   //Delete the user and remove the associated thought.
-  deleteuser(req, res) {
+  deleteUser(req, res) {
     User.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
         !user
@@ -93,7 +93,7 @@ module.exports = {
   },
 
   //Delete a friend from a user's friend list
-  deleteFriend(req, res) {
+  removeFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
       { $pull: { friend: { _id: req.params.friendId } } },
