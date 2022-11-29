@@ -14,7 +14,3 @@ db.once("open", () => {
     console.log(`API server running on port ${PORT}!`);
   });
 });
-
-//const dayjs = require('dayjs')
-//import dayjs from 'dayjs' // ES 2015
-//dayjs().format()

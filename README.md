@@ -2,9 +2,9 @@
 
 ## Description
 
-Social Network back-end is an application that provides APIs to create, update,delete and view the all the users, friends with the associated thoughts and reactions.
+Social Network back-end is an application that provides APIs to create, update, delete and view all the users, friends with the associated thoughts and reactions.
 
-This application uses the MongoDB to store the data,Mongoose as an ODM application and Express.js to develop the RESTful APIs.
+This application uses the MongoDB to store the data, Mongoose as an ODM application and Express.js to develop the RESTful APIs.
 
 Here is a walkthrough [video](https://drive.google.com/file/d/1RkmIKHQXH4rXHWklZTgQ9sOvSwHlN55V/view) demonstrating the functionality of the application.
 
@@ -36,7 +36,7 @@ This project can be used in any Node.js environment.
 
 Following is a code snippet of the application page.
 
-Here it refers to the API PUT Route to GET a single user by its `id` value.
+Here it refers to the API GET Route to get a single user by its `id` value.
 
 ```Node.js
 

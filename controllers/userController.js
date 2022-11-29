@@ -20,8 +20,6 @@ module.exports = {
           ? res.status(404).json({ message: "User not found with this ID" })
           : res.json({
               user,
-              //thoughts: await thoughts(user.username),
-              //friends: await friend(req.params.userId),
             })
       )
       .catch((err) => {
