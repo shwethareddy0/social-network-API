@@ -45,4 +45,4 @@ const userSchema = new Schema(
 );
 
 const User = model("user", userSchema);
-modeule.exports = User;
+module.exports = User;

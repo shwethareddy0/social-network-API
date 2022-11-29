@@ -1,6 +1,8 @@
 const { ObjectId } = require("mongoose").Types;
 const { User, Thought } = require("../models");
 
+const thoughts = async (username) => Thought.find({ username: username });
+//const friends = async (username) => Thought.find({ username: username });
 module.exports = {
   //get all users
   getUsers(req, res) {
@@ -18,8 +20,8 @@ module.exports = {
           ? res.status(404).json({ message: "User not found with this ID" })
           : res.json({
               user,
-              thoughts: await thoughts(req.params.userid),
-              friends: await friends(req.params.userId),
+              //thoughts: await thoughts(user.username),
+              //friends: await friend(req.params.userId),
             })
       )
       .catch((err) => {
@@ -65,7 +67,7 @@ module.exports = {
       .then((thought) =>
         !thought
           ? res.status(404).json({
-              message: "User deleted, but no thought found",
+              message: "User deleted",
             })
           : res.json({ message: "User successfully deleted" })
       )
@@ -79,11 +81,16 @@ module.exports = {
   addFriend(req, res) {
     console.log("Add a friend");
     console.log(req.body);
-    User.findOneAndUpdate(
+    const friend = User.findOne({ _id: req.params.friendId });
+    const user = User.findOne({ _id: req.params.userId });
+    console.log(user.username);
+    user.friends.push(friend);
+    user.save();
+    /* User.findOneAndUpdate(
       { _id: req.params.userId },
       { $addToSet: { friends: req.body } },
       { runValidators: true, new: true }
-    )
+    )*/
       .then((user) =>
         !user
           ? res.status(404).json({ message: "User not found with this id" })
