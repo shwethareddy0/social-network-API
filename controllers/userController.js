@@ -78,39 +78,37 @@ module.exports = {
   },
 
   //Add a friend to a user's friend list
-  addFriend(req, res) {
-    console.log("Add a friend");
-    console.log(req.body);
-    const friend = User.findOne({ _id: req.params.friendId });
-    const user = User.findOne({ _id: req.params.userId });
-    console.log(user.username);
-    user.friends.push(friend);
-    user.save();
-    /* User.findOneAndUpdate(
-      { _id: req.params.userId },
-      { $addToSet: { friends: req.body } },
-      { runValidators: true, new: true }
-    )*/
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: "User not found with this id" })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
+  async addFriend(req, res) {
+    try {
+      console.log(req.body);
+      const friend = await User.findOne({ _id: req.params.friendId });
+      const user = await User.findOne({ _id: req.params.userId });
+      console.log(user.username);
+      user.friends.push(friend);
+      await user.save();
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
 
   //Delete a friend from a user's friend list
-  removeFriend(req, res) {
-    User.findOneAndUpdate(
-      { _id: req.params.userId },
-      { $pull: { friend: { _id: req.params.friendId } } },
-      { runValidators: true, new: true }
-    )
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: "User not found with this id" })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
+  async removeFriend(req, res) {
+    try {
+      console.log(req.body);
+      const friend = await User.findOne({ _id: req.params.friendId });
+      const user = await User.findOne({ _id: req.params.userId });
+      console.log(user.username);
+      console.log(user.friends);
+      const friendIndex = user.friends.findIndex((f) =>
+        f._id.equals(friend._id)
+      );
+      console.log(friendIndex);
+      user.friends.splice(friendIndex, 1);
+      await user.save();
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
 };
