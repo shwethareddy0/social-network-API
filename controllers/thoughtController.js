@@ -37,26 +37,6 @@ module.exports = {
       console.log(err);
       res.status(500).json(err);
     }
-    /*
-      .then((thought) => {
-        newThoughtId = thought._id;
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json(err);
-      });
-    //associate the new created thought to the user
-    User.findOneAndUpdate(
-      { _id: req.body.userId },
-      { $addToSet: { thoughts: req.body } },
-      { runValidators: true, new: true }
-    )
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: "User not found with this ID" })
-          : 
-      )
-      .;*/
   },
   //Update a thought
   updateThought(req, res) {
@@ -84,26 +64,35 @@ module.exports = {
   },
 
   //create a reaction
-  createReaction(req, res) {
-    let newReactionid;
-    const thoughtDoc = Thought.findOne({ _id: req.params.thoughtId });
-    thoughtDoc.reaction.push({
-      reactionBody: req.body.reaction,
-      userName: thoughtDoc.userName,
-    });
-    thoughtDoc.save(function (err) {
-      if (err) res.status(404).json({ message: "Reaction cannot be saved" });
-      res.json(thoughtDoc.reaction[thoughtDoc.reaction.length]);
-    });
+  async createReaction(req, res) {
+    try {
+      const thoughtDoc = await Thought.findOne({ _id: req.params.thoughtId });
+      console.log(thoughtDoc);
+      thoughtDoc.reactions.push({
+        reactionBody: req.body.reactionBody,
+        username: req.body.username,
+      });
+      await thoughtDoc.save();
+      console.log(thoughtDoc.reactions);
+      console.log(thoughtDoc.reactions.length);
+      res.json(thoughtDoc.reactions[thoughtDoc.reactions.length - 1]);
+    } catch (err) {
+      res.status(404).json({ message: "Reaction cannot be saved" });
+    }
   },
 
   //delete a reaction
-  deleteReaction(req, res) {
-    const thoughtDoc = Thought.findOne({ _id: req.params.thoughtId });
-    thoughtDoc.reaction.id(req.params.reactionId).remove();
-    thoughtDoc.save(function (err) {
-      if (err) res.status(404).json({ message: "Reaction cannot be saved" });
-      res.json(thoughtDoc.reaction[thoughtDoc.reaction.length]);
-    });
+  async deleteReaction(req, res) {
+    try {
+      const thoughtDoc = await Thought.findOne({ _id: req.params.thoughtId });
+      const reactionIndex = thoughtDoc.reactions.findIndex((r) =>
+        r.reactionId.equals(req.params.reactionId)
+      );
+      thoughtDoc.reactions.splice(reactionIndex, 1);
+      await thoughtDoc.save();
+      res.json(thoughtDoc);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
 };
