@@ -22,10 +22,22 @@ module.exports = {
   },
 
   //Create a new thought and add it to associated user.
-  createThought(req, res) {
-    let newThoughtId;
+  async createThought(req, res) {
     //create a thought
-    Thought.create(req.body)
+    try {
+      const newThought = await Thought.create(req.body);
+      console.log(req.body.userId);
+      const user = await User.findOne({ _id: req.body.userId });
+      console.log(user);
+      console.log(user.thoughts);
+      user.thoughts.push(newThought);
+      await user.save();
+      res.json(newThought);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+    /*
       .then((thought) => {
         newThoughtId = thought._id;
       })
@@ -42,9 +54,9 @@ module.exports = {
       .then((user) =>
         !user
           ? res.status(404).json({ message: "User not found with this ID" })
-          : res.json(user)
+          : 
       )
-      .catch((err) => res.status(500).json(err));
+      .;*/
   },
   //Update a thought
   updateThought(req, res) {
